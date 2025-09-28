@@ -5,11 +5,27 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "mariajosenhans",
-	"compatibility_date": "2025-09-18",
+	"compatibility_date": "2025-09-13",
 	"pages_build_output_dir": "./dist",
 	"observability": {
 		"enabled": true
-	}
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "pages-db",
+			"database_id": "482e8e89-5fb5-414f-b573-c427bcb16283"
+		}
+	],
+	// [env.production]
+	// name = "mariajosenhans-api"
+	// [[r2_buckets]]
+	// binding = "GALLERY_BUCKET"
+	// bucket_name = "mariajosenhans-gallery"
+	// [[d1_databases]]
+	// binding = "DB"
+	// database_name = "mariajosenhans-db"
+	// database_id = "f0eed453-6724-43b1-8daa-32d80f3bfa96"
 	/**
 	 * Smart Placement
 	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
