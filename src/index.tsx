@@ -1,6 +1,8 @@
 import { Hono } from 'hono'
+import { raw } from 'hono/html';
 import { renderer } from './renderer'
 import { basicAuth } from 'hono/basic-auth'
+import Nav from './nav'
 // import { env } from 'hono/adapter'
 
 interface Env {
@@ -43,7 +45,7 @@ app.get('/admin', async(c) => {
 
     return c.render(
       <div>
-        <h1>Admin, <em> you are authorized!</em></h1>
+        <h1>Admin, authorized <a href="/">👉</a></h1>
         {res.results?.map((page) => (
           <a class="admin-page" key={page.id} href={`/admin/page/edit/${page.id}`}>{page.title}</a>
         ))}
@@ -143,7 +145,7 @@ app.get('/admin/page/edit/:id', async (c) => {
 
     return c.render(
       <div>
-        <h1>Edit Page</h1>
+        <h1>Edit Page <a href={`/${page.slug}`}>👉</a></h1>
         <form method="post" action={`/admin/page/edit/${id}`}>
           <label>
             <div class="form-label">Title</div>
@@ -151,7 +153,8 @@ app.get('/admin/page/edit/:id', async (c) => {
           </label>
           <label>
             <div class="form-label">Content</div>
-            <textarea name="content" rows={8} cols={60}>{page.content ?? ''}</textarea>
+            {/* redactor test */}
+            <textarea id="admin-content-textarea" name="content" rows={8} cols={60}>{page.content ?? ''}</textarea>
           </label>
           <label>
             <div class="form-label">Slug</div>
@@ -253,23 +256,68 @@ app.post('/admin/page/delete/:id', async (c) => {
   }
 })
 
-app.get('/:id', (c) => {
-  const id = c.req.param('id')
-  return c.render(<h1>Hello! id: {id}</h1>)
+app.get('/:slug', async (c) => {
+  const db = c.env.DB
+  if (!db) {
+    console.warn('DB binding is not available — running in fallback mode.')
+    return c.render(<div>Database not available in this environment</div>)
+  }
+
+  const slug = c.req.param('slug')
+  if (!slug) return c.render(<div>Missing slug</div>)
+
+  try {
+    const page = await db
+      .prepare('SELECT * FROM Pages WHERE slug = ? LIMIT 1')
+      .bind(slug)
+      .first<Pages>()
+
+    if (!page) return c.render(<div>Page not found</div>)
+
+    return c.render(
+      <div class="page">
+        <h1>{page.title}</h1>
+        <div class="page-content">{raw(page.content)}</div>
+         {page.created_at && <div class="page-meta">Created: {page.created_at} • <a href={`/admin/page/edit/${page.id}`} class="admin-link">admin</a></div>}
+      </div>
+    )
+  } catch (err) {
+    console.error('DB fetch failed:', err)
+    return c.render(<div>Internal Server Error</div>)
+  }
 })
 
-app.get('/', (c) => {
-  return c.render(
-    <div>
-      <h1>Hello! Test again :)</h1>
-      <a href="/admin">admin</a>
-    </div>
-  )
+app.get('/', async (c) => {
+  const db = c.env.DB
+  if (!db) {
+    console.warn('DB binding is not available — running in fallback mode.')
+    c.render(<div>Database not available in this environment</div>)
+  }
+
+  try {
+    const res = await db.prepare('SELECT * FROM pages ORDER BY sequence').all()
+
+    return c.render(
+      <div>
+        <Nav hola={getNav} />
+        <div class="page-menu">
+          <ul>
+            {res.results?.map((page) => (
+              <li key={page.id}>
+                <a href={`/${page.slug}`}>{page.title}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    )
+  } catch (error) {
+    return c.render(<div>Internal Server Error... DB query failed: {error}</div>)
+  }
 })
 
-// app.post('/posts', (c) => c.text('Created!', 201))
-// app.delete('/gage/:id', (c) =>
-//   c.text(`${c.req.param('id')} is deleted!`)
-// )
+
+const getNav = 'nav prop works 123';
+
 
 export default app
