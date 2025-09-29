@@ -20,10 +20,10 @@ export const renderer = jsxRenderer(({ children }) => {
       <body>
         <div class="page-header">
           <a class="page-logo" href="/">
-            <img src="/static/img/maria-josenhans-signature.gif" class="pure-img" alt="Maria Josenhans" />
+            <img src="/static/img/maria-josenhans-signature.gif" alt="Maria Josenhans" />
           </a>
         </div>
-        <div>{children}</div>
+        {children}
       </body>
     </html>
   )

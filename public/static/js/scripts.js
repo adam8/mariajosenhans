@@ -6,8 +6,8 @@ $(function() {
         imageUploadCallback: function(image,json) { /* alert('uploaded'); */ },
         imageUploadErrorCallback: function(json) { alert('error'); },
         modalOpenedCallback: function() {
-        // create app engine upload link via ajax
-        $.getJSON('/upload-url?bucket={{ client.namespace_url }}', function (result) {
+            // create app engine upload link via ajax
+            $.getJSON('/upload-url?bucket={{ client.namespace_url }}', function (result) {
             // data.url = result;
             // alert('test: ' + result);
         });
@@ -17,5 +17,27 @@ $(function() {
                         'field2': '12345'
                     },
         buttons: ['formatting', 'bold', 'italic', 'link', 'unorderedlist', 'image', 'video', 'file', 'table', 'alignment', 'html']
+    })
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const nav = document.getElementsByClassName("page-nav")[0];
+    const hamburger = document.getElementsByClassName("page-nav-hamburger")[0];
+    const blocker = document.getElementsByClassName("page-nav-blocker")[0];
+
+    hamburger.addEventListener('click', function(event) {
+        event.preventDefault();
+
+        nav.classList.toggle('active');
+        hamburger.classList.toggle('active');
+        blocker.classList.toggle('active');
+    })
+
+    blocker.addEventListener('click', function(event) {
+        event.preventDefault();
+
+        nav.classList.remove('active');
+        hamburger.classList.remove('active');
+        blocker.classList.remove('active');
     })
 });

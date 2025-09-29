@@ -44,14 +44,11 @@ app.get('/admin', async(c) => {
     const res = await db.prepare('SELECT * FROM pages ORDER BY sequence').all()
 
     return c.render(
-      <div>
-        <h1>Admin, authorized <a href="/">👉</a></h1>
-        {res.results?.map((page) => (
-          <a class="admin-page" key={page.id} href={`/admin/page/edit/${page.id}`}>{page.title}</a>
-        ))}
-        <div class="buttons">
-          <button class="button button-submit" type="button" onclick="window.location.href='/admin/page/create'">Create New Page</button>
-        </div>
+      <div class="page">
+        {renderAdminBanner()}
+        {renderNav(db, true, 'admin')}
+        <h1>Admin</h1>
+        <button class="button button-submit" type="button" onclick="window.location.href='/admin/page/create'">Create New Page</button>
       </div>
     )
   } catch (error) {
@@ -60,9 +57,17 @@ app.get('/admin', async(c) => {
 })
 
 app.get('/admin/page/create', (c) => {
+  const db = c.env.DB
+  if (!db) {
+    console.warn('DB binding is not available — running in fallback mode.')
+    return c.render(<div>Database not available in this environment</div>)
+  }
+
   return c.render(
-    <div>
-      <h1>Admin: Create Page</h1>
+    <div class="page">
+      {renderNav(db, true, 'admin')}
+      {renderAdminBanner()}
+      <h1>Create New Page</h1>
         <form method="post" action="/admin/page/create">
           <label>
             <div class="form-label">Title</div>
@@ -119,41 +124,38 @@ app.post('/admin/page/create', async (c) => {
   }
 })
 
-app.get('/admin/page/edit/:id', async (c) => {
+app.get('/admin/page/edit/:slug', async (c) => {
   const db = c.env.DB
   if (!db) {
     console.warn('DB binding is not available — running in fallback mode.')
     return c.render(<div>Database not available in this environment</div>)
   }
 
-  const idParam = c.req.param('id')
-  if (!idParam) {
-    return c.render(<div>Missing page id</div>)
-  }
-
-  const id = Number(idParam)
-  if (Number.isNaN(id)) {
-    return c.render(<div>Invalid page id</div>)
+  const slugParam = c.req.param('slug')
+  if (!slugParam) {
+    return c.render(<div>Missing page slug</div>)
   }
 
   try {
-    const page = await db.prepare('SELECT * FROM Pages WHERE id = ? LIMIT 1').bind(id).first<Pages>()
+    const page = await db.prepare('SELECT * FROM Pages WHERE slug = ? LIMIT 1').bind(slugParam).first<Pages>()
 
     if (!page) {
       return c.render(<div>Page not found</div>)
     }
 
     return c.render(
-      <div>
-        <h1>Edit Page <a href={`/${page.slug}`}>👉</a></h1>
-        <form method="post" action={`/admin/page/edit/${id}`}>
+      <div class="page">
+        {renderAdminBanner()}
+        {renderNav(db, true, slugParam)}
+        <h1>Edit {page.title ?? ''}</h1>
+        <form method="post" action={`/admin/page/edit/${slugParam}`}>
+          <input type="hidden" name="id" value={page.id} />
           <label>
             <div class="form-label">Title</div>
             <input required name="title" type="text" value={page.title ?? ''} />
           </label>
           <label>
             <div class="form-label">Content</div>
-            {/* redactor test */}
             <textarea id="admin-content-textarea" name="content" rows={8} cols={60}>{page.content ?? ''}</textarea>
           </label>
           <label>
@@ -170,12 +172,15 @@ app.get('/admin/page/edit/:id', async (c) => {
           </div>
         </form>
         <form
-          action={`/admin/page/delete/${id}`}
+          action={`/admin/page/delete/${slugParam}`}
           class="buttons"
           method="post"
           onsubmit="return confirm('Are you sure you want to delete this page? This cannot be undone.')">
           <button class="button button-delete" type="submit">Delete Page</button>
         </form>
+        {page.updated_at && (
+          <div class="page-meta">Last updated: {page.updated_at}</div>
+        )}
       </div>
     )
   } catch (err) {
@@ -184,23 +189,23 @@ app.get('/admin/page/edit/:id', async (c) => {
   }
 })
 
-app.post('/admin/page/edit/:id', async (c) => {
+app.post('/admin/page/edit/:slug', async (c) => {
   const db = c.env.DB
   if (!db) {
     console.warn('DB binding is not available — running in fallback mode.')
     return c.render(<div>Database not available in this environment</div>)
   }
 
-  const idParam = c.req.param('id')
-  if (!idParam) return c.render(<div>Missing page id</div>)
-  const id = Number(idParam)
-  if (Number.isNaN(id)) return c.render(<div>Invalid page id</div>)
-
-  // Parse form data (works for form POSTs)
   const form = await c.req.formData()
+  const id = (form.get('id') as string) ?? ''
+  const idNumber = Number(id)
+    if (Number.isNaN(idNumber)) {
+      return c.render(<div>Invalid page id</div>)
+    }
+
   const title = (form.get('title') as string) ?? ''
   const content = (form.get('content') as string) ?? ''
-  const slugRaw = (form.get('slug') as string) ?? ''
+  const slugRaw = (form.get('slug') as string) ?? 'home'
   const sequence = Number(form.get('sequence') ?? 0)
 
   // Normalize slug (optional — keep or replace with different slug logic)
@@ -211,14 +216,10 @@ app.post('/admin/page/edit/:id', async (c) => {
     .replace(/\s+/g, '-')
     .replace(/[^\w-]/g, '')
 
-  if (!title || !content) {
-    return c.render(<div>Title and content are required</div>)
-  }
-
   try {
     await db
-      .prepare('UPDATE Pages SET title = ?, content = ?, slug = ?, sequence = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
-      .bind(title, content, slug, sequence, id)
+      .prepare('UPDATE Pages SET title = ?, content = ?, slug = ?, sequence = ?, updated_at = CURRENT_TIMESTAMP WHERE slug = ?')
+      .bind(title, content, slug, sequence, slugRaw)
       .run()
 
     return c.redirect('/admin')
@@ -229,25 +230,20 @@ app.post('/admin/page/edit/:id', async (c) => {
   }
 })
 
-app.post('/admin/page/delete/:id', async (c) => {
+app.post('/admin/page/delete/:slug', async (c) => {
   const db = c.env.DB
   if (!db) {
     console.warn('DB binding is not available — running in fallback mode.')
     return c.render(<div>Database not available in this environment</div>)
   }
 
-  const idParam = c.req.param('id')
-  if (!idParam) {
-    return c.render(<div>Missing page id</div>)
-  }
-
-  const id = Number(idParam)
-  if (Number.isNaN(id)) {
-    return c.render(<div>Invalid page id</div>)
+  const slugParam = c.req.param('slug')
+  if (!slugParam) {
+    return c.render(<div>Missing page slug</div>)
   }
 
   try {
-    await db.prepare('DELETE FROM Pages WHERE id = ?').bind(id).run()
+    await db.prepare('DELETE FROM Pages WHERE slug = ?').bind(slugParam).run()
 
     return c.redirect('/admin')
   } catch (err: any) {
@@ -275,10 +271,14 @@ app.get('/:slug', async (c) => {
     if (!page) return c.render(<div>Page not found</div>)
 
     return c.render(
-      <div class="page">
-        <h1>{page.title}</h1>
-        <div class="page-content">{raw(page.content)}</div>
-         {page.created_at && <div class="page-meta">Created: {page.created_at} • <a href={`/admin/page/edit/${page.id}`} class="admin-link">admin</a></div>}
+      <div>
+        {renderNav(db, false, slug)}
+        <div class="page">
+          <div class="page-content">{raw(page.content)}</div>
+          <div class="page-meta">
+            <a href={`/admin/page/edit/${page.slug}`} rel="nofollow" class="admin-link">admin</a>
+          </div>
+        </div>
       </div>
     )
   } catch (err) {
@@ -288,36 +288,63 @@ app.get('/:slug', async (c) => {
 })
 
 app.get('/', async (c) => {
-  const db = c.env.DB
+  const db: D1Database = c.env.DB
   if (!db) {
-    console.warn('DB binding is not available — running in fallback mode.')
+    console.warn('DB binding is not available.')
     c.render(<div>Database not available in this environment</div>)
   }
 
-  try {
-    const res = await db.prepare('SELECT * FROM pages ORDER BY sequence').all()
+  const page = await db
+    .prepare('SELECT * FROM Pages WHERE slug = ? LIMIT 1')
+    .bind('home')
+    .first<Pages>()
 
-    return c.render(
-      <div>
-        <Nav hola={getNav} />
-        <div class="page-menu">
-          <ul>
-            {res.results?.map((page) => (
-              <li key={page.id}>
-                <a href={`/${page.slug}`}>{page.title}</a>
-              </li>
-            ))}
-          </ul>
+  if (!page) return c.render(<div>"Home" page not found</div>)
+
+  return c.render(
+    <div>
+        {renderNav(db, false, 'home')}
+        <div class="page">
+          <div class="page-content">{raw(page.content)}</div>
+          <div class="page-meta"><a href={`/admin/page/edit/${page.slug}`} class="admin-link">admin</a></div>
         </div>
       </div>
-    )
-  } catch (error) {
-    return c.render(<div>Internal Server Error... DB query failed: {error}</div>)
-  }
+  )
 })
 
+const renderNav = async (db: D1Database, isAdmin: boolean, activePage: string) => {
+  const res = await db.prepare('SELECT * FROM pages ORDER BY sequence').all()
+  const adminPath = isAdmin == true ? '/admin/page/edit' : '';
 
-const getNav = 'nav prop works 123';
+  return (
+    <div>
+      <a href="#" class="page-nav-hamburger"><span /></a>
+      <ul class="page-nav">
+        {res.results?.map((page) => (
+          <li class="page-nav-list-item" key={page.id}>
+            <a href={`${adminPath}/${page.slug}`} class={activePage === page.slug ? 'active' : ''}>
+              {page.title}
+            </a>
+          </li>
+        ))}
+        {isAdmin && (
+          <li class="page-nav-list-item" key="live-website"><a href="/">👉 Live website</a></li>
+        )}
+      </ul>
+      <div class="page-nav-blocker" />
+    </div>
+  )
+}
 
+const renderAdminBanner = () => {
+  return (
+    <div class="admin-banner">
+      <p>
+        <span style="margin-right: 20px">You are in admin mode </span>
+        <button class="button button-submit" type="button" onclick="window.location.href='/admin/page/create'">Create New Page</button>
+      </p>
+    </div>
+  )
+}
 
 export default app
