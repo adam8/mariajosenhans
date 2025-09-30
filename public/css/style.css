@@ -18,7 +18,7 @@ h3 {
 }
 
 input {
-    border: 1px solid #ddd;
+    border: 1px solid #eee;
     padding: 5px;
 }
 
@@ -34,6 +34,10 @@ input {
     p {
         margin: 8px 0;
     }
+}
+
+.admin-page-form {
+    margin-top: 3rem;
 }
 
 .admin-page {

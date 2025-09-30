@@ -1,0 +1,343 @@
+body {
+	padding: 0 10px 10px 10px;
+	color: #555;
+}
+
+#layout {
+	max-width:1050px;
+	margin:0 auto;
+}
+
+.pure-g > div { -webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box; }
+.l-box { padding: 1em; }
+
+h1 {
+	color: #707070;
+	font-weight: normal;
+	font-size: 21px;
+	text-transform: none;
+	margin-bottom: 5px;
+}
+h1.page-title { display: none; }
+#page-text { max-width: 700px; line-height: 1.5em; font-size: 90%; }
+#page-text img { max-width: 100%; height: auto; } 
+
+a { color: #777; }
+.nav-li-active > a {
+	color: #444!important;
+	font-weight: bold;
+}
+.pure-menu li a:hover, .pure-menu li a:focus { background: #fff; }
+
+#pure-menu-maria a:hover { color: #000; }
+
+#logo-container { text-align: right;}
+#logo-container img { display:inline-block; }
+
+.pic-caption { display: none; }
+
+.slideshow {
+	max-width: 750px;
+}
+.slideshow-thumb-container > div {
+	padding: 0 4px 4px 0;
+}
+
+#paintings-links div {
+	padding: 5px 10px 5px 0;
+}
+
+#pure-menu-maria { display: none; }
+.pure-menu.pure-menu-open { border: none; }
+.pure-menu ul ul {
+	display: block;
+	left:0;
+	position:relative;
+	top:0;
+	visibility: visible;
+}
+.pure-menu ul ul li a {
+	padding: 5px 20px 5px 35px;
+}
+
+#mc_embed_signup { 
+	padding-left: 0px; 
+	margin-top: 50px;
+}
+
+#admin {
+	display: none;
+  color: #AAA;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 12px;
+}
+#admin a {
+  color: #BBB;
+	text-decoration: none;
+}
+
+
+
+/******  FANCYBOX *************/
+#fancybox-title-float-left, #fancybox-title-float-right, #fancybox-title-float-main { background: none;color: #000;}
+#fancybox-title { /* left: 100%!important;bottom: 0; */ }
+.fancybox-title-float { height: auto; }
+#fancybox-title-float-wrap {position: relative;  padding:0;   }
+#fancybox-title-float-wrap td { line-height: 1.2em; }
+#fancybox-title-float-main p { margin: 10px 0; color: #999; font-size: 11px; }
+.fancybox-bg { background-image: none!important; }
+#fancybox-content { -webkit-box-shadow: 0 0px 12px #BBB;-moz-box-shadow:  0 0px 12px #BBB;box-shadow: 0 0px 12px #BBB!important;}
+.fancybox-title-float-wrap {
+	margin-bottom: 0;
+	top: 100%;
+	bottom: inherit; 
+}
+.fancybox-title-float-wrap .child {
+	display: inline-block;
+	margin-right: -100%;
+	padding: 2px 20px;
+	background: none;
+	text-shadow: none;
+	color: #555;
+	font-weight: normal;
+	line-height: 20px;
+	white-space: inherit;
+	margin-bottom: 0;
+}
+.fancybox-nav { width: 50%;}
+.fancybox-next {right: -40px!important;}
+.fancybox-prev {left: -40px!important;}
+.fancybox-opened .fancybox-skin {-webkit-box-shadow: 0 0px 20px rgba(0, 0, 0, 0.1);-moz-box-shadow: 0 0px 20px rgba(0, 0, 0, 0.1);box-shadow: 0 0px 20px rgba(0, 0, 0, 0.1);border: 1px solid rgba(0, 0, 0, 0.06);}
+.fancybox-close {top: -26px;right: -27px;}
+#nav-home {display: none;}
+
+
+
+
+
+
+
+
+
+/****** RESPONSIVE ***************/
+#logo .pure-img { height: auto; }
+@media only screen and (max-width: 767px) {
+	#logo .pure-img { height: 75px; }
+}
+
+
+
+
+
+
+
+/********  SIDEMENU   ************/
+
+#layout, #menu, .menu-link { -webkit-transition: all 0.2s ease-out;-moz-transition: all 0.2s ease-out;-ms-transition: all 0.2s ease-out;-o-transition: all 0.2s ease-out;transition: all 0.2s ease-out;}
+
+#layout.active {
+	  position: relative;
+	  left: 200px;
+}
+#layout.active #menu {
+    left: 200px;
+    width: 200px;
+}
+#layout.active .menu-link {
+    left: 200px;
+}
+
+
+
+
+/*
+The `#menu` `<div>` is the parent `<div>` that contains the `.pure-menu` that
+appears on the left side of the page.
+*/
+
+#menu {
+    margin-left: -200px; /* "#menu" width */
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1000; /* so the menu or its navicon stays above all content */
+    background: #e6e6e6;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+   
+    /*
+    Remove all background/borders, since we are applying them to #menu.
+    */
+     #menu .pure-menu,
+     #menu .pure-menu ul {
+        border: none;
+        background: transparent;
+    } 
+
+    /*
+    Change color of the anchor links on hover/focus.
+    */
+    #menu .pure-menu li a:hover,
+    #menu .pure-menu li a:focus {
+        background: #fff;
+    }
+
+    /*
+    This styles the selected menu item `<li>`.
+    */
+    #menu .pure-menu-selected,
+    #menu .pure-menu-heading {
+        background: #555;
+    }
+        /*
+        This styles a link within a selected menu item `<li>`.
+        */
+        #menu .pure-menu-selected a {
+            color: #fff;
+        }
+
+    /*
+    This styles the menu heading.
+    */
+    #menu .pure-menu-heading {
+        font-size: 110%;
+        color: #fff;
+        margin: 0;
+    }
+
+/* -- Dynamic Button For Responsive Menu -------------------------------------*/
+
+/*
+`.menu-link` represents the responsive menu toggle that shows/hides on small screens.
+*/
+.menu-link {
+    position: fixed;
+    display: block; /* show this only on small screens */
+    top: 10px;
+    left: 10px; /* "#menu width" */
+    background: #000;
+    background: rgba(0,0,0,0.5);
+    font-size: 10px; /* change this value to increase/decrease button size */
+    z-index: 10;
+		width: 2.5em;
+		height: auto;
+		padding: 2.6em 1.6em;
+}
+
+.menu-link:hover,
+.menu-link:focus {
+    background: #000;
+}
+
+.menu-link span {
+    position: relative;
+    display: block;
+}
+
+.menu-link span,
+.menu-link span:before,
+.menu-link span:after {
+    background-color: #fff;
+    width: 100%;
+    height: 0.2em;
+}
+
+.menu-link span:before,
+.menu-link span:after {
+    position: absolute;
+    margin-top: -0.6em;
+    content: " ";
+}
+
+.menu-link span:after {
+    margin-top: 0.6em;
+}
+
+
+.videowrapper {
+    float: none;
+    clear: both;
+    width: 100%;
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 25px;
+    height: 0;
+}
+.videowrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+
+/* -- Responsive Styles (Media Queries) ------------------------------------- */
+
+/*
+Hides the menu at `48em`, but modify this based on your app's needs.
+*/
+@media (min-width: 48em) {
+
+    .header,
+    .content {
+        padding-left: 2em;
+        padding-right: 2em;
+    }
+
+    #layout {
+        padding-left: 0; /* left col width "#menu" */
+        /* left: 0; */
+    }
+		
+		#pure-menu-maria { 
+			display:block; 
+			background: transparent;
+		}
+		
+    #menu {
+        /* left: 0; */
+        display: none;
+}
+
+    .menu-link {
+        position: fixed;
+        left: 150px;
+        display: none;
+    }
+		
+		#layout.active {
+			left: 0px;
+		}
+
+    #layout.active .menu-link {
+        left: 150px;
+    }
+		
+		#paintings-links div {
+			padding: 35px;
+		}
+		
+		#admin {
+			display: block;
+		}
+		
+		#mc_embed_signup {
+			padding-left:20px;
+		}
+		
+}
+
+
+
+
+
+
+
+
+

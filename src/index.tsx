@@ -8,6 +8,9 @@ import Nav from './nav'
 interface Env {
   DB: D1Database;
   SECRET: string; // if you use c.env.SECRET in basicAuth
+  PUBLIC_ASSETS?: {
+    fetch: (requestOrPath: Request | string, init?: RequestInit) => Promise<Response>
+  }
 }
 
 interface Pages {
@@ -20,9 +23,39 @@ interface Pages {
   updated_at?: string;
 }
 
+interface Pic {
+  id?: number;
+  page_id: number;
+  filename: string;
+  caption?: string | null;
+  sequence?: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+async function getPicsForPage(db: D1Database, pageId: number) {
+  const res = await db
+    .prepare('SELECT id, page_id, filename, caption, sequence, created_at FROM Pics WHERE page_id = ? ORDER BY sequence, id')
+    .bind(pageId)
+    .all<Pic>();
+  return res.results ?? [];
+}
+
 const app = new Hono<{ Bindings: Env }>(); // CloudflareBindings
 
 app.use(renderer)
+
+// app.get('/about*', async (c) => {
+//   return c.render(<div>hola</div>);
+//   // const assets = c.env.PUBLIC_ASSETS;
+//   // if (!assets) {
+//   //   return c.render(<div>About page (static assets not configured)</div>);
+//   // }
+
+//   // const res = await assets.fetch('/about/index.html');
+//   // if (res.status === 404) return c.render(<div>About page not found, eh</div>);
+//   // return res;
+// });
 
 app.use('/admin/*', async (c, next) => {
   const auth = basicAuth({
@@ -143,12 +176,31 @@ app.get('/admin/page/edit/:slug', async (c) => {
       return c.render(<div>Page not found</div>)
     }
 
+    const pics = await getPicsForPage(db, Number(page.id));
+
+
     return c.render(
       <div class="page">
         {renderAdminBanner()}
         {renderNav(db, true, slugParam)}
         <h1>Edit {page.title ?? ''}</h1>
-        <form method="post" action={`/admin/page/edit/${slugParam}`}>
+
+        {pics.length === 0 ? (
+          <div>No pictures yet</div>
+        ) : (
+          <div class="gallery-grid">
+            {pics.map((pic) => (
+              <div class="gallery-item" key={pic.id}>
+                <img src={pic.filename.startsWith('/') ? pic.filename : `/${pic.filename}`} alt={pic.caption ?? ''} />
+                {pic.caption && <div class="caption">{pic.caption}</div>}
+                {/* optional: small delete form/button per-image (you'd need to add a DELETE handler route) */}
+              </div>
+            ))}
+          </div>
+        )}
+        <button class="button" type="button">Add Image</button>
+        
+        <form class="admin-page-form" method="post" action={`/admin/page/edit/${slugParam}`}>
           <input type="hidden" name="id" value={page.id} />
           <label>
             <div class="form-label">Title</div>
