@@ -339,30 +339,30 @@ app.get('/:slug', async (c) => {
   }
 })
 
-app.get('/', async (c) => {
-  const db: D1Database = c.env.DB
-  if (!db) {
-    console.warn('DB binding is not available.')
-    c.render(<div>Database not available in this environment</div>)
-  }
+// app.get('/', async (c) => {
+//   const db: D1Database = c.env.DB
+//   if (!db) {
+//     console.warn('DB binding is not available.')
+//     c.render(<div>Database not available in this environment</div>)
+//   }
 
-  const page = await db
-    .prepare('SELECT * FROM Pages WHERE slug = ? LIMIT 1')
-    .bind('home')
-    .first<Pages>()
+//   const page = await db
+//     .prepare('SELECT * FROM Pages WHERE slug = ? LIMIT 1')
+//     .bind('home')
+//     .first<Pages>()
 
-  if (!page) return c.render(<div>"Home" page not found</div>)
+//   if (!page) return c.render(<div>"Home" page not found</div>)
 
-  return c.render(
-    <div>
-        {renderNav(db, false, 'home')}
-        <div class="page">
-          <div class="page-content">{raw(page.content)}</div>
-          <div class="page-meta"><a href={`/admin/page/edit/${page.slug}`} class="admin-link">admin</a></div>
-        </div>
-      </div>
-  )
-})
+//   return c.render(
+//     <div>
+//         {renderNav(db, false, 'home')}
+//         <div class="page">
+//           <div class="page-content">{raw(page.content)}</div>
+//           <div class="page-meta"><a href={`/admin/page/edit/${page.slug}`} class="admin-link">admin</a></div>
+//         </div>
+//       </div>
+//   )
+// })
 
 const renderNav = async (db: D1Database, isAdmin: boolean, activePage: string) => {
   const res = await db.prepare('SELECT * FROM pages ORDER BY sequence').all()
