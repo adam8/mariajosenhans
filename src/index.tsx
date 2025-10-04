@@ -304,32 +304,6 @@ app.post('/admin/page/delete/:slug', async (c) => {
   }
 })
 
-app.get('/', async (c) => {
-  return c.html(<html><body>test</body></html>)
-  // const db: D1Database = c.env.DB
-  // if (!db) {
-  //   console.warn('DB binding is not available.')
-  //   c.render(<div>Database not available in this environment</div>)
-  // }
-
-  // const page = await db
-  //   .prepare('SELECT * FROM Pages WHERE slug = ? LIMIT 1')
-  //   .bind('home')
-  //   .first<Pages>()
-
-  // if (!page) return c.render(<div>"Home" page not found</div>)
-
-  // return c.render(
-  //   <div>
-  //       {renderNav(db, false, 'home')}
-  //       <div class="page">
-  //         <div class="page-content">{raw(page.content)}</div>
-  //         <div class="page-meta"><a href={`/admin/page/edit/${page.slug}`} class="admin-link">admin</a></div>
-  //       </div>
-  //     </div>
-  // )
-})
-
 app.get('/:slug', async (c) => {
   const db = c.env.DB
   if (!db) {
@@ -363,6 +337,325 @@ app.get('/:slug', async (c) => {
     console.error('DB fetch failed:', err)
     return c.render(<div>Internal Server Error</div>)
   }
+})
+
+
+
+app.get('/', async (c) => {
+  return c.html(`
+    <!DOCTYPE html>
+<html lang="en" class=""><head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1">
+    <title>MARIA JOSENHANS - HOME </title>
+		
+    <link rel="stylesheet" href="/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen">
+    <!-- <link rel="stylesheet" href="https://yui.yahooapis.com/pure/0.5.0-rc-1/pure-min.css">-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous"> 
+    
+    <!-- <link rel="stylesheet" href="https://yui.yahooapis.com/pure/0.5.0-rc-1/grids-responsive-min.css"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@1.0.0/build/grids-responsive-min.css">
+
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="/css/styles-mariajosenhans2.css" media="screen">
+
+    
+
+    
+  <style type="text/css">.fancybox-margin{margin-right:0px;}</style></head>
+
+  <body data-page-id="home" class="home" style="">
+    <div id="layout">
+			
+	    <a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+	    </a> 
+		
+	 		<div id="menu">
+         <div class="pure-menu pure-menu-open">
+            
+							
+	                    
+	                  </ul>
+	                </li>
+	              
+	                <li data-id="home" id="nav-home" class="nav-li-active">
+	                  <a class="admin-toggle" href="/">Home</a>
+	                  <ul>
+	                    
+	                  </ul>
+	                </li>
+	              
+	                <li data-id="available-paintings" id="nav-available-paintings">
+	                  <a class="admin-toggle" href="/available-paintings/">AVAILABLE PAINTINGS</a>
+	                  <ul>
+	                    
+	                      
+	                        <li data-id="landscapes--large" id="nav-landscapes--large">
+	                          <a class="admin-toggle" href="/landscapes--large/">landscapes | large</a>
+	                        </li>
+	                      
+	                        <li data-id="plein-air--small" id="nav-plein-air--small">
+	                          <a class="admin-toggle" href="/plein-air--small/">plein air | small</a>
+	                        </li>
+	                      
+	                        <li data-id="drawings" id="nav-drawings">
+	                          <a class="admin-toggle" href="/drawings/">drawings</a>
+	                        </li>
+	                      
+	                    
+	                  </ul>
+	                </li>
+	              
+	                <li data-id="gallery-representation" id="nav-gallery-representation">
+	                  <a class="admin-toggle" href="/gallery-representation/">GALLERY REPRESENTATION</a>
+	                  <ul>
+	                    
+	                  </ul>
+	                </li>
+	              
+	                <li data-id="archive" id="nav-archive">
+	                  <a class="admin-toggle" href="/archive/">ARCHIVE</a>
+	                  <ul>
+	                    
+	                  </ul>
+	                </li>
+	              
+	                <li data-id="workshops" id="nav-workshops">
+	                  <a class="admin-toggle" href="/workshops/">WORKSHOPS</a>
+	                  <ul>
+	                    
+	                  </ul>
+	                </li>
+	              
+	                <li data-id="news--events" id="nav-news--events">
+	                  <a class="admin-toggle" href="/news--events/">NEWS &amp; EVENTS</a>
+	                  <ul>
+	                    
+	                  </ul>
+	                </li>
+	              
+	                <li data-id="about" id="nav-about">
+	                  <a class="admin-toggle" href="/about/">ABOUT</a>
+	                  <ul>
+	                    
+	                  </ul>
+	                </li>
+	              
+	                <li data-id="contact" id="nav-contact">
+	                  <a class="admin-toggle" href="/contact/">CONTACT</a>
+	                  <ul>
+	                    
+	                  </ul>
+	                </li>
+	              
+							</ul>
+            
+          </div>
+			</div>
+			
+			
+			
+			
+      <div id="header" class="pure-g">
+				<div class="pure-u-1 pure-u-md-3-4"></div>
+				<div id="logo-container" class="pure-u-1 pure-u-md-1-4">
+					<a id="logo" href="/"><img src="/img/maria-josenhans-signature.gif" class="pure-img" alt="Maria Josenhans"></a>
+			 	</div>
+    	</div>
+			
+			
+			
+
+    	<div class="pure-g">
+    		<div class="pure-u-1 pure-u-md-3-4">
+    			
+
+				<div id="content">       
+            <!-- begin content block -->
+            
+
+  <h1 class="page-title">Home</h1>
+  
+  
+  
+  <div id="page-text"><p><img src="https://lh3.googleusercontent.com/TQfg-RHfUJ_q5ViD2Rc2OCLjW4Y8GMBjpLE2CmSGlhnDsgXQNu2UYM2-dbXbDsdVlOydX_nTyNUN-ZkrNXel4j3TLCLM4Q=s1000"></p></div> 
+  
+  <div id="admin"><a href="http://www.picjot.com">Admin</a></div>
+  
+
+            <!-- #end content block -->
+    			</div>
+
+
+    		</div>
+
+        
+    
+        <div class="pure-u-1 pure-u-md-1-4">
+          
+      		<div id="pure-menu-maria" class="pure-menu pure-menu-open">
+            
+							
+	                    
+	                  <ul>
+	              
+	                <li data-id="home" id="nav-home" class="nav-li-active">
+	                  <a class="admin-toggle" href="/">Home</a>
+	                  <ul>
+	                    
+	                  </ul>
+	                </li>
+	              
+	                <li data-id="available-paintings" id="nav-available-paintings">
+	                  <a class="admin-toggle" href="/available-paintings/">AVAILABLE PAINTINGS</a>
+	                  <ul>
+	                    
+	                      
+	                        <li data-id="landscapes--large" id="nav-landscapes--large">
+	                          <a class="admin-toggle" href="/landscapes--large/">landscapes | large</a>
+	                        </li>
+	                      
+	                        <li data-id="plein-air--small" id="nav-plein-air--small">
+	                          <a class="admin-toggle" href="/plein-air--small/">plein air | small</a>
+	                        </li>
+	                      
+	                        <li data-id="drawings" id="nav-drawings">
+	                          <a class="admin-toggle" href="/drawings/">drawings</a>
+	                        </li>
+	                      
+	                    
+	                  </ul>
+	                </li>
+	              
+	                <li data-id="gallery-representation" id="nav-gallery-representation">
+	                  <a class="admin-toggle" href="/gallery-representation/">GALLERY REPRESENTATION</a>
+	                  <ul>
+	                    
+	                  </ul>
+	                </li>
+	              
+	                <li data-id="archive" id="nav-archive">
+	                  <a class="admin-toggle" href="/archive/">ARCHIVE</a>
+	                  <ul>
+	                    
+	                  </ul>
+	                </li>
+	              
+	                <li data-id="workshops" id="nav-workshops">
+	                  <a class="admin-toggle" href="/workshops/">WORKSHOPS</a>
+	                  <ul>
+	                    
+	                  </ul>
+	                </li>
+	              
+	                <li data-id="news--events" id="nav-news--events">
+	                  <a class="admin-toggle" href="/news--events/">NEWS &amp; EVENTS</a>
+	                  <ul>
+	                    
+	                  </ul>
+	                </li>
+	              
+	                <li data-id="about" id="nav-about">
+	                  <a class="admin-toggle" href="/about/">ABOUT</a>
+	                  <ul>
+	                    
+	                  </ul>
+	                </li>
+	              
+	                <li data-id="contact" id="nav-contact">
+	                  <a class="admin-toggle" href="/contact/">CONTACT</a>
+	                  <ul>
+	                    
+	                  </ul>
+	                </li>
+	              
+							</ul>
+            
+          </div>
+    
+          <!-- <div id="mc_embed_signup">
+            <form class="pure-form" action="http://mariajosenhans.us1.list-manage.com/subscribe/post?u=4cc80f8e321faadb6b3a073f5&amp;id=597e669ec0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate="">
+            <h1>Maria Josenhans</h1>
+              <div class="mc-field-group" id="mailchimp-email-field">
+              	<input type="email" style="max-width:100%;" value="" placeholder="Enter email" name="EMAIL" class="required email" id="mce-EMAIL">
+                <input type="submit" value="Join Email List" name="subscribe" id="mc-embedded-subscribe" class="pure-button">
+              </div>
+            	<div id="mce-responses" class="clear">
+            		<div class="response" id="mce-error-response" style="display:none"></div>
+            		<div class="response" id="mce-success-response" style="display:none"></div>
+            	</div>	
+            </form>
+          </div> -->
+
+        </div>
+				
+      </div>
+
+    </div>
+
+    <script type="text/javascript" async="" src="https://www.googletagmanager.com/gtag/js?id=G-NSN4P68E6D&amp;cx=c&amp;_slc=1"></script><script async="" src="//www.google-analytics.com/analytics.js"></script><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<script src="/js/ui-side-menu.js"></script> 
+    <script>
+      var page_id = $('body').data('page-id');
+      $('#nav-'+page_id).addClass('nav-li-active');
+			$('#menu .pure-menu').html($('#pure-menu-maria').html());
+		</script>
+
+     
+  <script type="text/javascript" src="/js/jquery.fancybox.pack.js"></script>
+  <script>
+    $(document).ready(function() {
+    	$(".fancybox").fancybox({
+        padding : 0,
+        margin: [20, 60, 20, 60], // Increase left/right margin to put nav arrows outside
+        type: 'image',
+        border: 0,
+        openEffect: 'none',
+        closeEffect: 'none',
+        nextEffect: 'fade',
+        prevEffect: 'fade',
+        helpers : { 
+          overlay : {
+            css : {
+              'background' : 'rgba(255, 255, 255, 0.9)'
+            }
+          }
+        }
+    	});
+    });
+  </script>
+
+		
+	
+</body></html>`
+  );
+
+  
+  // const db: D1Database = c.env.DB
+  // if (!db) {
+  //   console.warn('DB binding is not available.')
+  //   c.render(<div>Database not available in this environment</div>)
+  // }
+
+  // const page = await db
+  //   .prepare('SELECT * FROM Pages WHERE slug = ? LIMIT 1')
+  //   .bind('home')
+  //   .first<Pages>()
+
+  // if (!page) return c.render(<div>"Home" page not found</div>)
+
+  // return c.render(
+  //   <div>
+  //       {renderNav(db, false, 'home')}
+  //       <div class="page">
+  //         <div class="page-content">{raw(page.content)}</div>
+  //         <div class="page-meta"><a href={`/admin/page/edit/${page.slug}`} class="admin-link">admin</a></div>
+  //       </div>
+  //     </div>
+  // )
 })
 
 const renderNav = async (db: D1Database, isAdmin: boolean, activePage: string) => {
