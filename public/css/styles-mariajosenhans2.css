@@ -49,6 +49,11 @@ a { color: #777; }
 
 #pure-menu-maria { display: none; }
 .pure-menu.pure-menu-open { border: none; }
+.pure-menu ul { 
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
 .pure-menu ul ul {
 	display: block;
 	left:0;
@@ -56,8 +61,27 @@ a { color: #777; }
 	top:0;
 	visibility: visible;
 }
+
+.pure-menu {
+    padding: 0 20px 20px 20px;
+}
+
+.pure-menu a {
+    text-decoration: none;
+}
+
+.pure-menu ul ul {
+    padding-bottom: 10px;
+}
+
 .pure-menu ul ul li a {
-	padding: 5px 20px 5px 35px;
+	padding: 5px 20px 5px 25px;
+    display: block;
+}
+
+.pure-menu ul li a {
+	padding: 5px 20px 5px 0px;
+    display: block;
 }
 
 #mc_embed_signup { 
@@ -120,7 +144,7 @@ a { color: #777; }
 
 
 
-
+img.pure-img { max-width: 100%; height: auto; }
 /****** RESPONSIVE ***************/
 #logo .pure-img { height: auto; }
 @media only screen and (max-width: 767px) {
@@ -158,6 +182,7 @@ appears on the left side of the page.
 */
 
 #menu {
+    padding-top: 20px;
     margin-left: -200px; /* "#menu" width */
     width: 200px;
     position: fixed;
