@@ -17,10 +17,10 @@
 			"database_id": "482e8e89-5fb5-414f-b573-c427bcb16283"
 		}
 	],
-	"assets": {
-		"directory": "./public",
-		"binding": "PUBLIC_ASSETS"
-	},
+	// "assets": {
+	// 	"directory": "./public",
+	// 	"binding": "PUBLIC_ASSETS"
+	// },
 	// [env.production]
 	// name = "mariajosenhans-api"
 	// [[r2_buckets]]
