@@ -6,7 +6,7 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "mariajosenhans",
 	"compatibility_date": "2025-09-13",
-	"pages_build_output_dir": "./dist",
+	// "pages_build_output_dir": "./dist",
 	"observability": {
 		"enabled": true
 	},
@@ -17,10 +17,12 @@
 			"database_id": "482e8e89-5fb5-414f-b573-c427bcb16283"
 		}
 	],
-	// "assets": {
-	// 	"directory": "./public",
-	// 	"binding": "PUBLIC_ASSETS"
-	// },
+	// "site": {
+	// 	"bucket": "./public"
+	// }
+	"assets": {
+		"directory": "./public"
+	},
 	// [env.production]
 	// name = "mariajosenhans-api"
 	// [[r2_buckets]]
