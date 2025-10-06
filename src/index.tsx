@@ -483,7 +483,7 @@ app.get('/', async (c) => {
   
   <div id="page-text"><p><img src="https://lh3.googleusercontent.com/TQfg-RHfUJ_q5ViD2Rc2OCLjW4Y8GMBjpLE2CmSGlhnDsgXQNu2UYM2-dbXbDsdVlOydX_nTyNUN-ZkrNXel4j3TLCLM4Q=s1000"></p></div> 
   
-  <div id="admin"><a href="http://www.picjot.com">Admin</a></div>
+  
   
 
             <!-- #end content block -->
