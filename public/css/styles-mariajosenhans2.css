@@ -89,6 +89,12 @@ a { color: #777; }
 	margin-top: 50px;
 }
 
+.mc-field-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+}
+
 #admin {
 	display: none;
   color: #AAA;
@@ -357,12 +363,3 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 		}
 		
 }
-
-
-
-
-
-
-
-
-
